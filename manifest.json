@@ -1,0 +1,18 @@
+
+{
+  "name": "AuditCheck Pro",
+  "short_name": "AuditCheck",
+  "description": "Strumento di verifica compliance documentale tramite AI",
+  "start_url": ".",
+  "display": "standalone",
+  "background_color": "#f8fafc",
+  "theme_color": "#4f46e5",
+  "icons": [
+    {
+      "src": "https://cdn-icons-png.flaticon.com/512/1048/1048953.png",
+      "sizes": "512x512",
+      "type": "image/png",
+      "purpose": "any maskable"
+    }
+  ]
+}
