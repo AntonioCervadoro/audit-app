@@ -15,7 +15,7 @@
     <!-- Google Fonts -->
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;900&display=swap" rel="stylesheet">
     
-    <!-- Babel Standalone per JSX/TSX -->
+    <!-- Babel Standalone (Necessario per index.tsx offline) -->
     <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
 
     <style>
@@ -32,7 +32,7 @@
         .animate-fade-in { animation: fadeIn 0.3s cubic-bezier(0.16, 1, 0.3, 1) forwards; }
 
         #root:empty::before {
-            content: "Preparazione ambiente protetto...";
+            content: "Avvio AuditCheck sicuro...";
             display: flex;
             justify-content: center;
             align-items: center;
@@ -64,11 +64,9 @@
 <body class="bg-slate-50 text-slate-900">
     <div id="root"></div>
 
-    <!-- Script principale caricato tramite Babel -->
     <script type="text/babel" data-type="module" data-presets="react,typescript" src="index.tsx"></script>
 
     <script>
-        // Registrazione Service Worker per PWA e Offline
         if ('serviceWorker' in navigator) {
             window.addEventListener('load', () => {
                 navigator.serviceWorker.register('./sw.js')
