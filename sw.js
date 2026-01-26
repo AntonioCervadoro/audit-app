@@ -1,5 +1,5 @@
 
-const CACHE_NAME = 'audit-native-v4';
+const CACHE_NAME = 'audit-native-v5';
 const ASSETS_TO_CACHE = [
   './',
   './index.html',
