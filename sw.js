@@ -1,15 +1,13 @@
 
-const CACHE_NAME = 'audit-v8';
-const ASSETS = [
+const CACHE_NAME = 'audit-v9';
+const ASSETS_TO_CACHE = [
   './',
   './index.html',
   './index.tsx',
   './manifest.json',
-  // Motori core (Devono essere in cache per caricare l'app offline)
   'https://unpkg.com/@babel/standalone/babel.min.js',
   'https://cdn.tailwindcss.com',
   'https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;900&display=swap',
-  // Librerie esterne dichiarate nell'importmap
   'https://esm.sh/react@18.2.0',
   'https://esm.sh/react-dom@18.2.0',
   'https://esm.sh/react-dom@18.2.0/client',
@@ -20,18 +18,17 @@ const ASSETS = [
   'https://esm.sh/pdfjs-dist@4.10.38/build/pdf.worker.mjs'
 ];
 
-self.addEventListener('install', (e) => {
-  e.waitUntil(
+self.addEventListener('install', (event) => {
+  event.waitUntil(
     caches.open(CACHE_NAME).then((cache) => {
-      console.log('SW: Pre-caching assets');
-      return cache.addAll(ASSETS);
+      return cache.addAll(ASSETS_TO_CACHE);
     })
   );
   self.skipWaiting();
 });
 
-self.addEventListener('activate', (e) => {
-  e.waitUntil(
+self.addEventListener('activate', (event) => {
+  event.waitUntil(
     caches.keys().then((keys) => Promise.all(
       keys.map((key) => {
         if (key !== CACHE_NAME) return caches.delete(key);
@@ -41,25 +38,28 @@ self.addEventListener('activate', (e) => {
   self.clients.claim();
 });
 
-self.addEventListener('fetch', (e) => {
-  // Strategia: Cache First, fallback to Network
-  e.respondWith(
-    caches.match(e.request).then((cachedResponse) => {
+self.addEventListener('fetch', (event) => {
+  if (event.request.method !== 'GET') return;
+
+  event.respondWith(
+    caches.match(event.request).then((cachedResponse) => {
       if (cachedResponse) {
         return cachedResponse;
       }
-      return fetch(e.request).then((networkResponse) => {
-        // Opzionalmente aggiungi alla cache dinamicamente
-        if (networkResponse && networkResponse.status === 200 && networkResponse.type === 'basic') {
+
+      return fetch(event.request).then((networkResponse) => {
+        if (networkResponse && networkResponse.status === 200) {
           const responseToCache = networkResponse.clone();
           caches.open(CACHE_NAME).then((cache) => {
-            cache.put(e.request, responseToCache);
+            cache.put(event.request, responseToCache);
           });
         }
         return networkResponse;
       }).catch(() => {
-        // Se siamo offline e non è in cache, restituiamo un errore gestito
-        return new Response('Offline and not cached', { status: 503, statusText: 'Service Unavailable' });
+        if (event.request.mode === 'navigate') {
+          return caches.match('./index.html');
+        }
+        return new Response('Offline', { status: 503 });
       });
     })
   );
