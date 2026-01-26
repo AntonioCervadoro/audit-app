@@ -1,11 +1,12 @@
 
-const CACHE_NAME = 'audit-native-v2';
+const CACHE_NAME = 'audit-native-v3';
 const ASSETS_TO_CACHE = [
-  '/',
-  '/index.html',
-  '/index.tsx',
-  '/manifest.json',
-  'https://esm.sh/pdfjs-dist@4.10.38',
+  './',
+  './index.html',
+  './index.tsx',
+  './manifest.json',
+  'https://esm.sh/react@18.2.0',
+  'https://esm.sh/react-dom@18.2.0',
   'https://esm.sh/pdfjs-dist@4.10.38/build/pdf.worker.mjs'
 ];
 
@@ -27,14 +28,13 @@ self.addEventListener('activate', (event) => {
 self.addEventListener('fetch', (event) => {
   event.respondWith(
     caches.match(event.request).then((cached) => {
-      const networked = fetch(event.request).then((response) => {
+      return cached || fetch(event.request).then((response) => {
         if (response.status === 200) {
           const clone = response.clone();
           caches.open(CACHE_NAME).then(cache => cache.put(event.request, clone));
         }
         return response;
       }).catch(() => null);
-      return cached || networked;
     })
   );
 });
