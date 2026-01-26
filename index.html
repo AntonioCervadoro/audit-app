@@ -4,14 +4,18 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>AuditCheck Pro - Offline Local App</title>
+    <title>AuditCheck Pro - Privacy First</title>
     <meta name="theme-color" content="#4f46e5">
     <link rel="manifest" href="manifest.json">
     <link rel="apple-touch-icon" href="https://cdn-icons-png.flaticon.com/512/1048/1048953.png">
+    
+    <!-- Tailwind CSS -->
     <script src="https://cdn.tailwindcss.com"></script>
+    
+    <!-- Google Fonts -->
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;900&display=swap" rel="stylesheet">
     
-    <!-- Babel Standalone -->
+    <!-- Babel Standalone per JSX/TSX -->
     <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
 
     <style>
@@ -20,18 +24,24 @@
         .custom-scrollbar::-webkit-scrollbar-track { background: #f1f1f1; }
         .custom-scrollbar::-webkit-scrollbar-thumb { background: #cbd5e1; border-radius: 10px; }
         .custom-scrollbar::-webkit-scrollbar-thumb:hover { background: #94a3b8; }
-        @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
+        
+        @keyframes fadeIn { 
+            from { opacity: 0; transform: translateY(10px); } 
+            to { opacity: 1; transform: translateY(0); } 
+        }
         .animate-fade-in { animation: fadeIn 0.3s cubic-bezier(0.16, 1, 0.3, 1) forwards; }
+
         #root:empty::before {
-            content: "Inizializzazione motore locale...";
+            content: "Avvio applicazione sicura...";
             display: flex;
             justify-content: center;
             align-items: center;
             height: 100vh;
             color: #64748b;
             font-size: 0.875rem;
-            font-weight: 500;
+            font-weight: 600;
             background: #f8fafc;
+            letter-spacing: 0.025em;
         }
     </style>
 
@@ -54,15 +64,16 @@
 <body class="bg-slate-50 text-slate-900">
     <div id="root"></div>
 
-    <!-- Babel caricherà index.tsx come testo e lo trasformerà in JS -->
-    <script type="text/babel" data-presets="react,typescript" src="index.tsx"></script>
+    <!-- Script principale caricato tramite Babel -->
+    <script type="text/babel" data-type="module" data-presets="react,typescript" src="index.tsx"></script>
 
     <script>
+        // Registrazione Service Worker per PWA e Offline
         if ('serviceWorker' in navigator) {
             window.addEventListener('load', () => {
-                navigator.serviceWorker.register('./sw.js').then(reg => {
-                    console.log('PWA Offline Ready');
-                }).catch(err => console.log('PWA Error:', err));
+                navigator.serviceWorker.register('./sw.js')
+                    .then(reg => console.log('PWA: Ready'))
+                    .catch(err => console.error('PWA: Error', err));
             });
         }
     </script>
