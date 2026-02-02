@@ -1,5 +1,5 @@
 
-const CACHE_NAME = 'audit-v13';
+const CACHE_NAME = 'audit-v14';
 const ASSETS_TO_CACHE = [
   './',
   './index.html',
@@ -10,8 +10,7 @@ const ASSETS_TO_CACHE = [
 self.addEventListener('install', (event) => {
   event.waitUntil(
     caches.open(CACHE_NAME).then((cache) => {
-      console.log('SW: Pre-caching local assets v13');
-      // Usiamo una strategia più sicura: se un asset fallisce, non bloccare tutto
+      console.log('SW: Pre-caching local assets v14');
       return Promise.allSettled(
         ASSETS_TO_CACHE.map(asset => cache.add(asset))
       );
