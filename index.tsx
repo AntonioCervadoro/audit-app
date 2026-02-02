@@ -10,9 +10,9 @@ import { jsPDF } from 'jspdf';
 import autoTable from 'jspdf-autotable';
 import * as pdfjsLib from 'pdfjs-dist';
 
-// Configurazione worker PDF.js
-const PDF_WORKER_URL = 'https://esm.sh/pdfjs-dist@4.10.38/build/pdf.worker.mjs';
+console.log("AuditApp: Modulo caricato, avvio React...");
 
+const PDF_WORKER_URL = 'https://esm.sh/pdfjs-dist@4.10.38/build/pdf.worker.mjs';
 const generateId = () => Math.random().toString(36).substring(2, 11);
 
 const AuditApp = () => {
@@ -28,7 +28,7 @@ const AuditApp = () => {
         try {
             if (pdfjsLib && pdfjsLib.GlobalWorkerOptions) {
                 pdfjsLib.GlobalWorkerOptions.workerSrc = PDF_WORKER_URL;
-                console.log("AuditApp: Motore PDF inizializzato.");
+                console.log("AuditApp: Motore PDF inizializzato con successo.");
             }
         } catch (e) {
             console.error("Errore Worker PDF:", e);
@@ -317,6 +317,7 @@ const AuditApp = () => {
 
 const container = document.getElementById('root');
 if (container) {
+    console.log("AuditApp: Root trovato, rendering in corso...");
     const root = createRoot(container);
     root.render(<AuditApp />);
 }
