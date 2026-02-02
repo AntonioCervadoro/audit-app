@@ -5,7 +5,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>AuditCheck Pro - Privacy First</title>
-    <meta name="theme-color" content="#4f46e5">
+    <meta name="theme-color" content="#4f46-e5">
     <link rel="manifest" href="manifest.json">
     <link rel="apple-touch-icon" href="https://cdn-icons-png.flaticon.com/512/1048/1048953.png">
     
@@ -15,8 +15,8 @@
     <!-- Google Fonts -->
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;900&display=swap" rel="stylesheet">
     
-    <!-- Babel Standalone (Necessario per index.tsx offline) -->
-    <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
+    <!-- Babel Standalone - VERSIONE BLOCCATA PER STABILITÀ -->
+    <script src="https://unpkg.com/@babel/standalone@7.23.12/babel.min.js"></script>
 
     <style>
         body { font-family: 'Inter', sans-serif; overflow-x: hidden; }
@@ -55,8 +55,8 @@
     "jspdf": "https://esm.sh/jspdf@2.5.1",
     "jspdf-autotable": "https://esm.sh/jspdf-autotable@3.8.2",
     "pdfjs-dist": "https://esm.sh/pdfjs-dist@4.10.38",
-    "react/": "https://esm.sh/react@^19.2.3/",
-    "react-dom/": "https://esm.sh/react-dom@^19.2.3/"
+    "react/": "https://esm.sh/react@^19.2.4/",
+    "react-dom/": "https://esm.sh/react-dom@^19.2.4/"
   }
 }
 </script>
@@ -64,7 +64,8 @@
 <body class="bg-slate-50 text-slate-900">
     <div id="root"></div>
 
-    <script type="text/babel" data-type="module" data-presets="react,typescript" src="index.tsx"></script>
+    <!-- Rimosso data-type="module" che causava il bug con le nuove versioni di Babel -->
+    <script type="text/babel" data-presets="react,typescript" src="index.tsx"></script>
 
     <script>
         if ('serviceWorker' in navigator) {
