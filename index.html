@@ -15,8 +15,8 @@
     <!-- Google Fonts -->
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;900&display=swap" rel="stylesheet">
     
-    <!-- Babel Standalone - Versione 7.23.12 (Ultra-stabile) -->
-    <script src="https://unpkg.com/@babel/standalone@7.23.12/babel.min.js"></script>
+    <!-- Babel Standalone - Cambio in CDNJS per compatibilità CORS -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/babel-standalone/7.23.12/babel.min.js" crossorigin="anonymous"></script>
 
     <style>
         body { font-family: 'Inter', sans-serif; overflow-x: hidden; }
@@ -32,7 +32,7 @@
         .animate-fade-in { animation: fadeIn 0.3s cubic-bezier(0.16, 1, 0.3, 1) forwards; }
 
         #root:empty::before {
-            content: "Avvio AuditCheck (V12)...";
+            content: "Inizializzazione Sistema (V13)...";
             display: flex;
             justify-content: center;
             align-items: center;
@@ -41,7 +41,6 @@
             font-size: 0.875rem;
             font-weight: 600;
             background: #f8fafc;
-            letter-spacing: 0.025em;
         }
     </style>
 
@@ -64,18 +63,16 @@
 <body class="bg-slate-50 text-slate-900">
     <div id="root"></div>
 
-    <script type="text/babel" data-presets="react,typescript">
-        console.log("Babel: Inizio compilazione index.tsx...");
-    </script>
+    <!-- Script principale -->
     <script type="text/babel" data-presets="react,typescript" src="index.tsx"></script>
 
     <script>
-        // Registrazione Service Worker v12
+        // Registrazione Service Worker v13 con pulizia aggressiva
         if ('serviceWorker' in navigator) {
             window.addEventListener('load', () => {
                 navigator.serviceWorker.register('./sw.js')
                     .then(reg => {
-                        console.log('PWA: Ready v12');
+                        console.log('PWA: Ready v13');
                         if (reg.waiting) {
                             reg.waiting.postMessage({ type: 'SKIP_WAITING' });
                             window.location.reload();
@@ -84,12 +81,6 @@
                     .catch(err => console.error('PWA Error:', err));
             });
         }
-
-        // Cattura errori globali per debug su Chromebook
-        window.onerror = function(msg, url, lineNo, columnNo, error) {
-            console.error('Errore Globale:', msg, 'alla linea:', lineNo);
-            return false;
-        };
     </script>
 </body>
 </html>
