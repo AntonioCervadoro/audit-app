@@ -1,27 +1,20 @@
 
-const CACHE_NAME = 'audit-v12';
+const CACHE_NAME = 'audit-v13';
 const ASSETS_TO_CACHE = [
   './',
   './index.html',
   './index.tsx',
-  './manifest.json',
-  'https://unpkg.com/@babel/standalone@7.23.12/babel.min.js',
-  'https://cdn.tailwindcss.com',
-  'https://esm.sh/react@18.2.0',
-  'https://esm.sh/react-dom@18.2.0',
-  'https://esm.sh/react-dom@18.2.0/client',
-  'https://esm.sh/lucide-react@0.460.0?external=react',
-  'https://esm.sh/jspdf@2.5.1',
-  'https://esm.sh/jspdf-autotable@3.8.2',
-  'https://esm.sh/pdfjs-dist@4.10.38',
-  'https://esm.sh/pdfjs-dist@4.10.38/build/pdf.worker.mjs'
+  './manifest.json'
 ];
 
 self.addEventListener('install', (event) => {
   event.waitUntil(
     caches.open(CACHE_NAME).then((cache) => {
-      console.log('SW: Pre-caching v12 assets');
-      return cache.addAll(ASSETS_TO_CACHE);
+      console.log('SW: Pre-caching local assets v13');
+      // Usiamo una strategia più sicura: se un asset fallisce, non bloccare tutto
+      return Promise.allSettled(
+        ASSETS_TO_CACHE.map(asset => cache.add(asset))
+      );
     })
   );
   self.skipWaiting();
@@ -43,18 +36,26 @@ self.addEventListener('activate', (event) => {
 
 self.addEventListener('fetch', (event) => {
   if (event.request.method !== 'GET') return;
+
   event.respondWith(
     caches.match(event.request).then((cachedResponse) => {
-      return cachedResponse || fetch(event.request).then((networkResponse) => {
-        if (networkResponse && networkResponse.status === 200) {
-          const responseToCache = networkResponse.clone();
-          caches.open(CACHE_NAME).then((cache) => {
-            cache.put(event.request, responseToCache);
-          });
+      if (cachedResponse) return cachedResponse;
+
+      return fetch(event.request).then((networkResponse) => {
+        if (!networkResponse || networkResponse.status !== 200 || networkResponse.type !== 'basic') {
+          return networkResponse;
         }
+        const responseToCache = networkResponse.clone();
+        caches.open(CACHE_NAME).then((cache) => {
+          cache.put(event.request, responseToCache);
+        });
         return networkResponse;
+      }).catch(() => {
+        if (event.request.mode === 'navigate') {
+          return caches.match('./index.html');
+        }
       });
-    }).catch(() => caches.match('./index.html'))
+    })
   );
 });
 
