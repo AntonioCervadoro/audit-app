@@ -15,8 +15,8 @@
     <!-- Google Fonts -->
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;900&display=swap" rel="stylesheet">
     
-    <!-- Babel Standalone - Cambio in CDNJS per compatibilità CORS -->
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/babel-standalone/7.23.12/babel.min.js" crossorigin="anonymous"></script>
+    <!-- Babel Standalone - URL Corretto e Stabile -->
+    <script src="https://unpkg.com/@babel/standalone@7/babel.min.js"></script>
 
     <style>
         body { font-family: 'Inter', sans-serif; overflow-x: hidden; }
@@ -32,7 +32,7 @@
         .animate-fade-in { animation: fadeIn 0.3s cubic-bezier(0.16, 1, 0.3, 1) forwards; }
 
         #root:empty::before {
-            content: "Inizializzazione Sistema (V13)...";
+            content: "Caricamento AuditCheck (V14)...";
             display: flex;
             justify-content: center;
             align-items: center;
@@ -63,16 +63,16 @@
 <body class="bg-slate-50 text-slate-900">
     <div id="root"></div>
 
-    <!-- Script principale -->
+    <!-- Script principale compilato da Babel -->
     <script type="text/babel" data-presets="react,typescript" src="index.tsx"></script>
 
     <script>
-        // Registrazione Service Worker v13 con pulizia aggressiva
+        // Registrazione Service Worker v14
         if ('serviceWorker' in navigator) {
             window.addEventListener('load', () => {
                 navigator.serviceWorker.register('./sw.js')
                     .then(reg => {
-                        console.log('PWA: Ready v13');
+                        console.log('PWA: Ready v14');
                         if (reg.waiting) {
                             reg.waiting.postMessage({ type: 'SKIP_WAITING' });
                             window.location.reload();
