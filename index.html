@@ -7,16 +7,27 @@
     <title>AuditCheck Pro - Privacy First</title>
     <meta name="theme-color" content="#4f46e5">
     <link rel="manifest" href="manifest.json">
-    <link rel="apple-touch-icon" href="https://cdn-icons-png.flaticon.com/512/1048/1048953.png">
     
+    <!-- 1. SW KILLER: Pulisce i 200+ worker rimasugli delle versioni precedenti -->
+    <script>
+        if ('serviceWorker' in navigator) {
+            navigator.serviceWorker.getRegistrations().then(registrations => {
+                for (let registration of registrations) {
+                    registration.unregister();
+                    console.log('SW Killer: Unregistered faulty worker');
+                }
+            });
+        }
+    </script>
+
     <!-- Tailwind CSS -->
     <script src="https://cdn.tailwindcss.com"></script>
     
     <!-- Google Fonts -->
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;900&display=swap" rel="stylesheet">
     
-    <!-- Babel Standalone - URL Corretto e Stabile -->
-    <script src="https://unpkg.com/@babel/standalone@7/babel.min.js"></script>
+    <!-- Babel Standalone - Versione ultra-stabile -->
+    <script src="https://unpkg.com/@babel/standalone@7.24.0/babel.min.js"></script>
 
     <style>
         body { font-family: 'Inter', sans-serif; overflow-x: hidden; }
@@ -32,7 +43,7 @@
         .animate-fade-in { animation: fadeIn 0.3s cubic-bezier(0.16, 1, 0.3, 1) forwards; }
 
         #root:empty::before {
-            content: "Caricamento AuditCheck (V14)...";
+            content: "Sincronizzazione Sistema V15...";
             display: flex;
             justify-content: center;
             align-items: center;
@@ -44,6 +55,7 @@
         }
     </style>
 
+    <!-- 2. IMPORTMAP PULITO: Solo React 18, nessuna traccia di React 19 -->
     <script type="importmap">
 {
   "imports": {
@@ -63,24 +75,18 @@
 <body class="bg-slate-50 text-slate-900">
     <div id="root"></div>
 
-    <!-- Script principale compilato da Babel -->
-    <script type="text/babel" data-presets="react,typescript" src="index.tsx"></script>
+    <!-- 3. CARICAMENTO MODULO: type="text/babel" con data-type="module" per gestire gli import -->
+    <script type="text/babel" data-presets="react,typescript" data-type="module" src="index.tsx"></script>
 
     <script>
-        // Registrazione Service Worker v14
-        if ('serviceWorker' in navigator) {
-            window.addEventListener('load', () => {
+        // Registrazione nuovo Service Worker V15 (solo dopo pulizia)
+        setTimeout(() => {
+            if ('serviceWorker' in navigator) {
                 navigator.serviceWorker.register('./sw.js')
-                    .then(reg => {
-                        console.log('PWA: Ready v14');
-                        if (reg.waiting) {
-                            reg.waiting.postMessage({ type: 'SKIP_WAITING' });
-                            window.location.reload();
-                        }
-                    })
+                    .then(reg => console.log('PWA: Clean V15 Registered'))
                     .catch(err => console.error('PWA Error:', err));
-            });
-        }
+            }
+        }, 2000); // Ritardo per dare tempo allo "Killer" di agire
     </script>
 </body>
 </html>
